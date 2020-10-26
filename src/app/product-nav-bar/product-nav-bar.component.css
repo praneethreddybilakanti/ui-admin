@@ -1,0 +1,66 @@
+.navbar {
+    width: 100%;
+    background-color: rgb(45, 179, 231);
+    overflow: auto;
+}
+
+
+/* Navigation links */
+
+.navbar a {
+    float: left;
+    padding: 12px;
+    color: white;
+    text-decoration: none;
+    font-size: 17px;
+    width: 20%;
+    /* Four equal-width links. If you have two links, use 50%, and 33.33% for three links, etc.. */
+    text-align: center;
+    /* If you want the text to be centered */
+}
+
+
+/* Add a background color on mouse-over */
+
+.navbar a:hover {
+    background-color: rgb(36, 115, 233);
+}
+
+
+/* Style the current/active link */
+
+.navbar a.active {
+    background-color: #4caf50;
+}
+
+
+/* Add responsiveness - on screens less than 500px, make the navigation links appear on top of each other, instead of next to each other */
+
+@media screen and (max-width: 500px) {
+    .navbar a {
+        float: none;
+        display: block;
+        width: 100%;
+        text-align: left;
+        /* If you want the text to be left-aligned on small screens */
+    }
+}
+
+.dis {
+    color: currentColor;
+    cursor: not-allowed;
+    opacity: 0.5;
+    text-decoration: none;
+    display: inline-block;
+    pointer-events: none;
+}
+
+.dis>a {
+    color: currentColor;
+    display: inline-block;
+    /* For IE11/ MS Edge bug */
+    pointer-events: none;
+    text-decoration: none;
+}
+
+.active {}

@@ -1,0 +1,28 @@
+<div class="container">
+
+    <div>
+        <ul class="nav navbar-nav navbar-right">
+
+            <button class="btn btn-primary mb-3" (click)="insertNewResult()">
+            <span class="glyphicon glyphicon-plus"></span>Add New Row
+            </button>
+        </ul>
+    </div>
+    &nbsp;
+    <hr>
+
+    <ag-grid-angular style="height: 300px;" class="ag-theme-alpine" [columnDefs]="columnDefs" [pagination]="true" [rowData]="rowData" (gridReady)="onGridReady($event)" [singleClickEdit]="true" [editType]="'fullRow'" [frameworkComponents]="frameworkComponents"
+        [stopEditingWhenGridLosesFocus]="true">
+    </ag-grid-angular>
+    <div>
+        <ul class="nav navbar-nav navbar-right">
+
+            <button routerLink="/images" class="btn btn-primary mb-3" (click)="saveAttributes()"> <span></span> Next &raquo;
+                </button>
+
+
+
+        </ul>
+    </div>
+
+</div>

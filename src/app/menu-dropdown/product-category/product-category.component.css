@@ -1,0 +1,39 @@
+#myInput {
+    padding: 0px;
+    border: 0;
+    border-radius: 0;
+    background: #f1f1f1;
+}
+
+.custom-container {
+    height: 150px;
+}
+
+.custom-dropdown {
+    width: 30%;
+    float: left;
+}
+
+.nav-sub-category {
+    width: 30%;
+}
+
+button {
+    width: 170px;
+}
+
+.custom-dropdown-menu {
+    height: 150px;
+}
+
+.wrapper {
+    width: 150px;
+    padding-top: 20px;
+    height: 50px;
+    margin-left: 15px;
+    float: left;
+}
+
+select {
+    width: 150px;
+}
