@@ -20,6 +20,7 @@ import { } from 'ag-grid-enterprise';
 import { ActionbuttonsComponent } from './components/actionbuttons/actionbuttons.component';
 import { ButtonRenderComponent } from './components/button-render/button-render.component';
 import { AttributeDataService } from './shared/attributedata.service';
+import {NgxWebstorageModule} from 'ngx-webstorage';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,9 @@ import { AttributeDataService } from './shared/attributedata.service';
 	//NotifierModule.withConfig( customNotifierOptions ),
 	FormsModule,
 	AgGridModule,
-	HttpClientModule,
+  HttpClientModule,
+  NgxWebstorageModule.forRoot(),
+  
 	
 
 

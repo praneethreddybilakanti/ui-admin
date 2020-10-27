@@ -12,6 +12,7 @@ import { ProductAttributeServiceService } from 'src/app/service/product-attribut
 import { Router } from '@angular/router';
 import { AttributeDataService } from 'src/app/shared/attributedata.service';
 import { JsonPipe } from '@angular/common';
+import { LocalStorageService } from 'ngx-webstorage';
 @Component({
   selector: 'app-images',
   templateUrl: './images.component.html',
@@ -40,13 +41,13 @@ export class ImagesComponent implements OnInit {
   columnDefs = [
 
     {
-      field: 'value', sortable: true, filter: true, editable: true, resizable: true
-    },
-    { field: 'priority', sortable: true, filter: true, editable: true, resizable: true },
-    { field: 'order', sortable: true, filter: true, editable: true, resizable: true },
-    {
-      field: 'defaultvalue', sortable: true, filter: true, editable: true, resizable: true
-    },
+      headerName:"value", field: 'value', sortable: true, filter: true, editable: true, resizable: true
+     },
+     { headerName:"priority",field: 'priority', sortable: true, filter: true, editable: true, resizable: true },
+     { headerName:"order",field: 'ordervalue', sortable: true, filter: true, editable: true, resizable: true },
+     {
+       headerName:"defaultvalue",field: 'defaultvalue', sortable: true, filter: true, editable: true, resizable: true
+     },
 
     {
       headerName: "add",
@@ -77,7 +78,8 @@ export class ImagesComponent implements OnInit {
   constructor(
     private router: Router,
     private productAttributeServiceService: ProductAttributeServiceService,
-    private attributeDataService: AttributeDataService
+    private attributeDataService: AttributeDataService,    private storage: LocalStorageService
+
 
   ) {
 
@@ -138,6 +140,7 @@ export class ImagesComponent implements OnInit {
     this.columnApi = params.columnApi;
 
     this.api.sizeColumnsToFit();
+    this.rowData=this.storage.retrieve("images");
 
     // temp fix until AG-1181 is fixed
     this.api.hideOverlay();
@@ -166,7 +169,6 @@ export class ImagesComponent implements OnInit {
     });
     console.log("images attributes:" + JSON.stringify(this.imagesAttributeList))
 
-    this.rowData.push(this.imagesAttributeList);
     productAttributeFinalObject.attributesPair.set("images", this.imagesAttributeList);
     productAttributeFinalObject.attributesPair.set("Trading", this.dataAttributesTrading);
     productAttributeFinalObject.attributesPair.set("logestics", this.dataAttributesLogostics);
@@ -181,14 +183,18 @@ export class ImagesComponent implements OnInit {
     console.log("after:" + JSON.stringify(productAttributeFinalObject.attributesPair.get("logestics")));
     console.log("after:" + JSON.stringify(productAttributeFinalObject.attributesPair.get("visibilty")));
 
+    this.storage.store("images", this.imagesAttributeList);
+    console.log("local:");
+
+
   }
 
 
-
+  
   onDeleteButtonClick(params) {
-    debugger;
     this.api.updateRowData({ remove: [params.data] });
+    this.storage.clear();
+
   }
-
-
 }
+

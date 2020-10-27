@@ -9,6 +9,7 @@ import { ActionbuttonsComponent } from 'src/app/components/actionbuttons/actionb
 import { ButtonRenderComponent } from 'src/app/components/button-render/button-render.component';
 import { AttributeDataService } from 'src/app/shared/attributedata.service';
 import { Output } from '@angular/core';
+import { LocalStorageService } from 'ngx-webstorage';
 
 @Component({
   selector: 'app-visibility',
@@ -24,19 +25,19 @@ export class VisibilityComponent implements OnInit {
   private subCategory: String;
   frameworkComponents: any;
   // $visibilty = new EventEmitter();
-   public  visibilityAttributeList: Attributes[]=[];
+  public visibilityAttributeList: Attributes[] = [];
 
   ngOnInit() {
 
     this.frameworkComponents = {
       buttonRenderer: ButtonRenderComponent
     },
-    this.attributeDataService.setVisibleAttributeValues(this.visibilityAttributeList);
+      this.attributeDataService.setVisibleAttributeValues(this.visibilityAttributeList);
   }
   constructor(
     private router: Router,
-    private productAttributeServiceService: ProductAttributeServiceService,
-    private attributeDataService: AttributeDataService
+    private attributeDataService: AttributeDataService,
+    private storage: LocalStorageService
 
   ) {
   }
@@ -44,12 +45,12 @@ export class VisibilityComponent implements OnInit {
   columnDefs = [
 
     {
-      field: 'value', sortable: true, filter: true, editable: true, resizable: true
+      headerName: "value", field: 'value', sortable: true, filter: true, editable: true, resizable: true
     },
-    { field: 'priority', sortable: true, filter: true, editable: true, resizable: true },
-    { field: 'order', sortable: true, filter: true, editable: true, resizable: true },
+    { headerName: "priority", field: 'priority', sortable: true, filter: true, editable: true, resizable: true },
+    { headerName: "order", field: 'ordervalue', sortable: true, filter: true, editable: true, resizable: true },
     {
-      field: 'defaultvalue', sortable: true, filter: true, editable: true, resizable: true
+      headerName: "defaultvalue", field: 'defaultvalue', sortable: true, filter: true, editable: true, resizable: true
     },
 
     {
@@ -80,13 +81,14 @@ export class VisibilityComponent implements OnInit {
     // insert a blank new row, providing the first sport as a default in the sport column
 
     const row = new Attributes();
-    const updates = this.api.updateRowData(
+    this.api.updateRowData(
       {
         add: [{
           row
         }]
       }
     );
+
   }
 
   /*
@@ -101,10 +103,10 @@ console.log(":::::::::::::::::"+updates);
 */
   onGridReady(params): void {
     this.api = params.api;
-    this.columnApi = params.columnApi;
+    this.columnApi = params.columnApiretrieve
 
     this.api.sizeColumnsToFit();
-
+    this.rowData = this.storage.retrieve("visibility");
     // temp fix until AG-1181 is fixed
     this.api.hideOverlay();
   }
@@ -123,59 +125,25 @@ console.log(":::::::::::::::::"+updates);
         defaultvalue: data.defaultvalue
       });
       //this.rowData.push(this.tradingAttributeList);
-  
+
     });
-  
-      this.rowData.push(this.visibilityAttributeList);
-      //this.attributeDataService.setVisibiltyValues(this.visibilityAttributeList);
-      console.log("data from trading:"+JSON.stringify(this.visibilityAttributeList));
 
-      console.log("data from visbility:" + this.visibilityAttributeList[0].value);
-      console.log("data from visbility:" + this.visibilityAttributeList[1].value);
-      console.log("data from visbility:" + this.visibilityAttributeList[2].value);
-      console.log("row" + this.rowData)
-   
-    //  productAttributes.attributesPair.set("visible", this.visibilityAttributeList);
-
-    //const abc = this.productAttributeServiceService.addProductAttributeIngestion(productAttributes).subscribe(data => {
-    //alert("data saved ");
-    //console.log("data" + data);
-    //});
-    // console.log("abc" + abc);
-
-
-    //const a = productAttributes.attributesPair.get("visible");
-    // console.log(a[0].value);
-    //console.log(a[1].value);
-    //console.log(a[2].value);
-
+    this.storage.store("visibility", this.visibilityAttributeList);
+    console.log("local:");
+console.log("visible data"+JSON.stringify(this.visibilityAttributeList))
 
   }
 
 
-  /*
-  onDeleteRow()
-   {
-  var selectedData = this.api.getSelectedRows();
-  this.api.updateRowData({ remove: selectedData });
- // console.log("delete"+selectedData[0].value)
-}
 
-onEditButtonClick(params)
-{
- this.api.startEditingCell({
-    rowIndex: params.rowIndex,
-    colKey: 'make'
-  });
-}
-
-onSaveButtonClick(params)
-{
- this.api.stopEditing();
-}
-*/
   onDeleteButtonClick(params) {
-    debugger;
-    this.api.updateRowData({ remove: [params.data] });
+
+    this.api.updateRowData({ remove: [params.data] }
+      );    
+
+    console.log("selected data" + params.data.values)
+    this.storage.clear(params.data)
+
+    console.log("remove.....................................")
   }
 }

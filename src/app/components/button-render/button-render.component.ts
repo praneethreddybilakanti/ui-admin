@@ -30,7 +30,6 @@ export class ButtonRenderComponent implements OnInit,ICellRendererAngularComp{
       const params = {
         event: $event,
         rowData: this.params.node.data
-        // ...something
       }
       this.params.onClick(this.params);
 

@@ -22,15 +22,13 @@
 
 /* Add a background color on mouse-over */
 
-.navbar a:hover {
-    background-color: rgb(36, 115, 233);
-}
+.navbar a:hover {}
 
 
 /* Style the current/active link */
 
 .navbar a.active {
-    background-color: #4caf50;
+    background-color: green;
 }
 
 
@@ -45,22 +43,3 @@
         /* If you want the text to be left-aligned on small screens */
     }
 }
-
-.dis {
-    color: currentColor;
-    cursor: not-allowed;
-    opacity: 0.5;
-    text-decoration: none;
-    display: inline-block;
-    pointer-events: none;
-}
-
-.dis>a {
-    color: currentColor;
-    display: inline-block;
-    /* For IE11/ MS Edge bug */
-    pointer-events: none;
-    text-decoration: none;
-}
-
-.active {}

@@ -7,6 +7,7 @@ import { Attributes} from 'src/app/model/attributes'
 import { ButtonRenderComponent } from 'src/app/components/button-render/button-render.component';
 import { ActionbuttonsComponent } from 'src/app/components/actionbuttons/actionbuttons.component';
 import { AttributeDataService } from 'src/app/shared/attributedata.service';
+import { LocalStorageService } from 'ngx-webstorage';
 @Component({
   selector: 'app-shipping',
   templateUrl: './shipping.component.html',
@@ -21,6 +22,7 @@ private category:String;
 private subCategory:String;
   productAttributeServiceService: any;
   frameworkComponents: any;
+  rowData = [];
 
   @Output()
   shippingAttributeList:Attributes[]=[];
@@ -33,18 +35,21 @@ ngOnInit() {
   },
   this.attributeDataService.setShippingAttributeValues(this.shippingAttributeList);
 }
-constructor(private attributeDataService:AttributeDataService)
+constructor(private attributeDataService:AttributeDataService,    private storage: LocalStorageService
+  )
 {
 }
 
 columnDefs = [
 
-  {field: 'value',sortable:true,filter:true , editable: true
-},
-  { field: 'priority',sortable:true,filter:true,editable: true},
-  { field: 'order',sortable:true,filter:true,editable: true },
-  { field: 'defaultvalue',sortable:true,filter:true,editable: true }
-  , {
+  {
+    headerName:"value", field: 'value', sortable: true, filter: true, editable: true, resizable: true
+   },
+   { headerName:"priority",field: 'priority', sortable: true, filter: true, editable: true, resizable: true },
+   { headerName:"order",field: 'ordervalue', sortable: true, filter: true, editable: true, resizable: true },
+   {
+     headerName:"defaultvalue",field: 'defaultvalue', sortable: true, filter: true, editable: true, resizable: true
+   }, {
     headerName: "add",
     cellRendererFramework: ActionbuttonsComponent,
     colId: "edit",
@@ -66,7 +71,6 @@ columnDefs = [
 ];
 
 
-rowData = [];
 insertNewResult() {
   // insert a blank new row, providing the first sport as a default in the sport column
 
@@ -96,6 +100,7 @@ onGridReady(params): void {
   this.columnApi = params.columnApi;
 
   this.api.sizeColumnsToFit();
+  this.rowData=this.storage.retrieve("shipping");
 
   // temp fix until AG-1181 is fixed
   this.api.hideOverlay();
@@ -115,53 +120,19 @@ saveAttributes() {
       ordervalue: data.ordervalue,
       defaultvalue: data.defaultvalue
     });
-    this.rowData.push(this.shippingAttributeList);
    // this.attributeDataService.setShippingAttributeValues(this.shippingAttributeList);
     console.log("data from shippingAttributeList:"+JSON.stringify(this.shippingAttributeList));
     
   });
-  //productAttributes.attributesPair.set("shipping", this.shippingAttributeList);
-/*
-  const abc = this.productAttributeServiceService.addProductAttributeIngestion(productAttributes).subscribe(data => {
-    alert("data saved ");
-    console.log("data" + data);
-  });
-  */
-  //console.log("abc" + abc);
-
- // console.log("list:" + this.shippingAttributeList.values)
-  //const a = productAttributes.attributesPair.get("shipping");
- // console.log(a[0].value);
-  //console.log(a[1].value);
-  //onsole.log(a[2].value);
+  this.storage.store("shipping", this.shippingAttributeList);
+  console.log("local:");
 
 
 }
 
-
-/*
-onDeleteRow()
- {
-var selectedData = this.api.getSelectedRows();
-this.api.updateRowData({ remove: selectedData });
-// console.log("delete"+selectedData[0].value)
-}
-
-onEditButtonClick(params)
-{
-this.api.startEditingCell({
-  rowIndex: params.rowIndex,
-  colKey: 'make'
-});
-}
-
-onSaveButtonClick(params)
-{
-this.api.stopEditing();
-}
-*/
 onDeleteButtonClick(params) {
-  debugger;
   this.api.updateRowData({ remove: [params.data] });
+  this.storage.clear();
+
 }
 }

@@ -11,6 +11,7 @@ import { EventEmitter } from '@angular/core';
 import { ButtonRenderComponent } from 'src/app/components/button-render/button-render.component';
 import { Output } from '@angular/core';
 import { ActionbuttonsComponent } from 'src/app/components/actionbuttons/actionbuttons.component';
+import { LocalStorageService } from 'ngx-webstorage';
 
 @Component({
   selector: 'app-logistics',
@@ -41,7 +42,8 @@ private subCategory:String;
   constructor(
     private router: Router,
     private productAttributeServiceService: ProductAttributeServiceService,
-    private attributeDataService: AttributeDataService
+    private attributeDataService: AttributeDataService,    private storage: LocalStorageService
+
 
   ) {
   }
@@ -49,13 +51,13 @@ private subCategory:String;
   columnDefs = [
 
     {
-      field: 'value', sortable: true, filter: true, editable: true, resizable: true
-    },
-    { field: 'priority', sortable: true, filter: true, editable: true, resizable: true },
-    { field: 'order', sortable: true, filter: true, editable: true, resizable: true },
-    {
-      field: 'defaultvalue', sortable: true, filter: true, editable: true, resizable: true
-    },
+      headerName:"value", field: 'value', sortable: true, filter: true, editable: true, resizable: true
+     },
+     { headerName:"priority",field: 'priority', sortable: true, filter: true, editable: true, resizable: true },
+     { headerName:"order",field: 'ordervalue', sortable: true, filter: true, editable: true, resizable: true },
+     {
+       headerName:"defaultvalue",field: 'defaultvalue', sortable: true, filter: true, editable: true, resizable: true
+     },
 
     {
       headerName: "add",
@@ -110,6 +112,7 @@ console.log(":::::::::::::::::"+updates);
     this.columnApi = params.columnApi;
 
     this.api.sizeColumnsToFit();
+    this.rowData=this.storage.retrieve("logistics");
 
     // temp fix until AG-1181 is fixed
     this.api.hideOverlay();
@@ -129,53 +132,21 @@ console.log(":::::::::::::::::"+updates);
         ordervalue: data.ordervalue,
         defaultvalue: data.defaultvalue
       });
-      this.rowData.push(this.logosticsAttributeList);
       this.attributeDataService.setLogosticsAttributeValues(this.logosticsAttributeList);
       console.log("data from logosticsAttributeList:"+JSON.stringify(this.logosticsAttributeList));
 
     });
-    /*
-    productAttributes.attributesPair.set("logostics", this.logosticsAttributeList);
+    this.storage.store("logistics", this.logosticsAttributeList);
+    console.log("local:");
 
-    const abc = this.productAttributeServiceService.addProductAttributeIngestion(productAttributes).subscribe(data => {
-      alert("data saved ");
-      console.log("data" + data);
-    });
-    console.log("abc" + abc);
 
-    console.log("list:" + this.logosticsAttributeList.values)
-    const a = productAttributes.attributesPair.get("logostics");
-    console.log(a[0].value);
-    console.log(a[1].value);
-    console.log(a[2].value);
-
-*/
   }
 
 
-  /*
-  onDeleteRow()
-   {
-  var selectedData = this.api.getSelectedRows();
-  this.api.updateRowData({ remove: selectedData });
- // console.log("delete"+selectedData[0].value)
-}
-
-onEditButtonClick(params)
-{
- this.api.startEditingCell({
-    rowIndex: params.rowIndex,
-    colKey: 'make'
-  });
-}
-
-onSaveButtonClick(params)
-{
- this.api.stopEditing();
-}
-*/
+  
   onDeleteButtonClick(params) {
-    debugger;
     this.api.updateRowData({ remove: [params.data] });
+    this.storage.clear();
+
   }
 }
